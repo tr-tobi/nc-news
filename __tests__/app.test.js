@@ -15,8 +15,15 @@ describe("/topic", () => {
       .then((res) => {
         expect(res.body.topic).toEqual(expect.any(Array));
         expect(Object.keys(res.body.topic[0])).toEqual(
-          expect.arrayContaining([])
+          expect.arrayContaining(["slug", "description"])
         );
+        expect(res.body).toEqual({
+          topic: [
+            { slug: "mitch", description: "The man, the Mitch, the legend" },
+            { slug: "cats", description: "Not dogs" },
+            { slug: "paper", description: "what books are made of" },
+          ],
+        });
       });
   });
 });
