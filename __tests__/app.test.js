@@ -13,10 +13,6 @@ describe("/topic", () => {
       .get("/api/topics")
       .expect(200)
       .then((res) => {
-        expect(res.body.topic).toEqual(expect.any(Array));
-        expect(Object.keys(res.body.topic[0])).toEqual(
-          expect.arrayContaining(["slug", "description"])
-        );
         expect(res.body).toEqual({
           topic: [
             { slug: "mitch", description: "The man, the Mitch, the legend" },
