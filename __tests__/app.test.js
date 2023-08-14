@@ -3,9 +3,21 @@ const app = require("../app");
 const data = require("../db/data/test-data");
 const req = require("supertest");
 const seed = require("../db/seeds/seed");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
+
+describe("/", () => {
+  test("GET:200 sends an object describing all available endpoints ", () => {
+    return req(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({ endpoints });
+      });
+  });
+});
 
 describe("/topic", () => {
   test("GET:200 sends an array of the topics to the end point ", () => {
