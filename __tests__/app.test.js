@@ -42,7 +42,6 @@ describe("/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((res) => {
-        console.log(res.body);
         expect(res.body.articles).toBeSortedBy("created_at", {
           descending: true,
         });
@@ -99,9 +98,54 @@ describe("/articles/:article_id", () => {
         expect(res.body.msg).toBe("Article does not exist");
       });
   });
-  test("GET:400 sends an appropriate and error message when given an invalid id", () => {
+  test("GET:400 sends an appropriate error message when given an invalid id", () => {
     return req(app)
       .get("/api/articles/hello")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid id");
+      });
+  });
+});
+
+describe("/articles/:article_id/comments", () => {
+  test("GET:200 sends an array of comments for the given article_id", () => {
+    return req(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.comments).toEqual([
+          {
+            body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+            votes: 16,
+            author: "icellusedkars",
+            article_id: 5,
+            created_at: "2020-06-09T05:00:00.000Z",
+            comment_id: 14,
+          },
+          {
+            body: "I am 100% sure that we're not completely sure.",
+            votes: 1,
+            author: "butter_bridge",
+            article_id: 5,
+            created_at: "2020-11-24T00:08:00.000Z",
+            comment_id: 15,
+          },
+        ]);
+      });
+  });
+
+  test("GET:404 sends an appropriate error message when given a valid but non-existent id", () => {
+    return req(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article does not exist");
+      });
+  });
+  test("GET:400 sends an appropriate and error message when given an invalid id", () => {
+    return req(app)
+      .get("/api/articles/hello/comments")
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Invalid id");
