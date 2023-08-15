@@ -1,4 +1,8 @@
-const { sendTopics, selectArticleById } = require("../models/model");
+const {
+  sendTopics,
+  selectArticleById,
+  sendArticles,
+} = require("../models/model");
 const endpoints = require("../endpoints.json");
 
 exports.getEndpoints = (req, res) => {
@@ -6,8 +10,14 @@ exports.getEndpoints = (req, res) => {
 };
 
 exports.getTopics = (req, res) => {
-  sendTopics().then((topic) => {
-    res.status(200).send({ topic });
+  sendTopics().then((topics) => {
+    res.status(200).send({ topics });
+  });
+};
+
+exports.getArticles = (req, res) => {
+  sendArticles().then((articles) => {
+    res.status(200).send({ articles });
   });
 };
 

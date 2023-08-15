@@ -26,11 +26,37 @@ describe("/topic", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          topic: [
+          topics: [
             { slug: "mitch", description: "The man, the Mitch, the legend" },
             { slug: "cats", description: "Not dogs" },
             { slug: "paper", description: "what books are made of" },
           ],
+        });
+      });
+  });
+});
+
+describe("/articles", () => {
+  test("GET:200 sends an array of the article objects to the end point ", () => {
+    return req(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        console.log(res.body);
+        expect(res.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        const articlesArray = res.body.articles;
+        articlesArray.forEach((element) => {
+          expect(element).not.toHaveProperty("body");
+          expect(element).toHaveProperty("author");
+          expect(element).toHaveProperty("title");
+          expect(element).toHaveProperty("article_id");
+          expect(element).toHaveProperty("topic");
+          expect(element).toHaveProperty("created_at");
+          expect(element).toHaveProperty("votes");
+          expect(element).toHaveProperty("article_img_url");
+          expect(element).toHaveProperty("comment_count");
         });
       });
   });
