@@ -6,19 +6,16 @@ exports.sendTopics = () => {
 };
 
 exports.sendArticles = () => {
-  const articles = db
-    .query("SELECT * FROM articles ORDER BY created_at DESC")
-    .then((result) => result.rows);
-  const commentCount = db
+  return db
     .query(
-      `SELECT COUNT(*)
+      `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.article_id)
     AS comment_count
-    FROM articles
-    GROUP BY article_id
-    ORDER BY created_at DESC`
+    FROM articles a
+    LEFT JOIN comments c ON a.article_id = c.article_id
+    GROUP BY a.article_id
+    ORDER BY a.created_at DESC`
     )
     .then((result) => result.rows);
-  return Promise.all([articles, commentCount]);
 };
 
 exports.selectArticleById = (article_id) => {
