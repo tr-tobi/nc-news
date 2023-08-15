@@ -2,6 +2,7 @@ const {
   sendTopics,
   selectArticleById,
   sendArticles,
+  sendCommentsByArticleId,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -26,6 +27,17 @@ exports.getArticleByid = (req, res, next) => {
   selectArticleById(article_id)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  sendCommentsByArticleId(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
