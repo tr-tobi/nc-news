@@ -26,12 +26,28 @@ describe("/topic", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          topic: [
+          topics: [
             { slug: "mitch", description: "The man, the Mitch, the legend" },
             { slug: "cats", description: "Not dogs" },
             { slug: "paper", description: "what books are made of" },
           ],
         });
+      });
+  });
+});
+
+describe("/articles", () => {
+  test("GET:200 sends an array of the article objects to the end point ", () => {
+    return req(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.updatedArticles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        expect(res.body.updatedArticles[0]).not.toHaveProperty("body");
+        expect(res.body.updatedArticles[0]).toHaveProperty("comment_count");
+        expect(res.body.updatedArticles[0].comment_count).toEqual(1);
       });
   });
 });
