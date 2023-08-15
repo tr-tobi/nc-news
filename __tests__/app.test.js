@@ -42,12 +42,45 @@ describe("/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((res) => {
-        expect(res.body.updatedArticles).toBeSortedBy("created_at", {
+        console.log(res.body);
+        expect(res.body.articles).toBeSortedBy("created_at", {
           descending: true,
         });
-        expect(res.body.updatedArticles[0]).not.toHaveProperty("body");
-        expect(res.body.updatedArticles[0]).toHaveProperty("comment_count");
-        expect(res.body.updatedArticles[0].comment_count).toEqual(1);
+        const articlesArray = res.body.articles;
+        articlesArray.forEach((element) => {
+          expect(element).not.toHaveProperty("body");
+          expect(element).toHaveProperty("author");
+          expect(element).toHaveProperty("title");
+          expect(element).toHaveProperty("article_id");
+          expect(element).toHaveProperty("topic");
+          expect(element).toHaveProperty("created_at");
+          expect(element).toHaveProperty("votes");
+          expect(element).toHaveProperty("article_img_url");
+          expect(element).toHaveProperty("comment_count");
+        });
+        expect(res.body.articles[0].comment_count).toEqual("2");
+        expect(res.body.articles[2]).toEqual({
+          author: "icellusedkars",
+          title: "Sony Vaio; or, The Laptop",
+          article_id: 2,
+          topic: "mitch",
+          created_at: "2020-10-16T05:03:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: "0",
+        });
+        expect(res.body.articles[5]).toEqual({
+          author: "rogersop",
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          article_id: 5,
+          topic: "cats",
+          created_at: "2020-08-03T13:14:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: "2",
+        });
       });
   });
 });
