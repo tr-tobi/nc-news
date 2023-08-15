@@ -52,6 +52,17 @@ describe("/articles/:article_id", () => {
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
+        expect(res.body.article).toMatchObject({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+        expect(res.body.article.article_id).toEqual(1);
       });
   });
   test("GET:404 sends an appropriate and error message when given a valid but non-existent id", () => {
@@ -68,6 +79,17 @@ describe("/articles/:article_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Invalid id");
+      });
+  });
+});
+
+describe("ALL /notapath", () => {
+  test("404: should respond with a cystom 404 message when the path is not found", () => {
+    return req(app)
+      .get("/api/odsnad")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Not Found");
       });
   });
 });
