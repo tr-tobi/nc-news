@@ -17,13 +17,7 @@ exports.getTopics = (req, res) => {
 
 exports.getArticles = (req, res) => {
   sendArticles().then((articles) => {
-    for (let i = 0; i < articles[0].length; i++) {
-      delete articles[0][i].body;
-      articles[0][i].comment_count = +articles[1][i].comment_count;
-    }
-    const updatedArticles = articles[0];
-
-    res.status(200).send({ updatedArticles });
+    res.status(200).send({ articles });
   });
 };
 
