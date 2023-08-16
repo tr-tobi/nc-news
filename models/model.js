@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const { formatComments } = require("../db/seeds/utils");
 
 exports.sendTopics = () => {
   return db.query("SELECT * FROM topics").then((result) => result.rows);
@@ -26,5 +25,24 @@ exports.selectArticleById = (article_id) => {
         return Promise.reject({ status: 404, msg: "Article does not exist" });
       }
       return result.rows[0];
+    });
+};
+exports.sendCommentsByArticleId = (article_id) => {
+  return db
+    .query(
+      `SELECT comments.*
+    FROM comments
+    JOIN articles ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1;`,
+      [article_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Article does not exist",
+        });
+      }
+      return result.rows;
     });
 };
