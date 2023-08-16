@@ -30,10 +30,10 @@ exports.selectArticleById = (article_id) => {
 exports.sendCommentsByArticleId = (article_id) => {
   return db
     .query(
-      `SELECT c.*
-    FROM comments c
-    JOIN articles a ON c.article_id = a.article_id
-    WHERE a.article_id = $1;`,
+      `SELECT comments.*
+    FROM comments
+    JOIN articles ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1;`,
       [article_id]
     )
     .then((result) => {
