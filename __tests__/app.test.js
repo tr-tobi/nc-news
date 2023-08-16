@@ -114,6 +114,15 @@ describe("/articles/:article_id/comments", () => {
       .get("/api/articles/5/comments")
       .expect(200)
       .then((res) => {
+        const commentsArray = res.body.comments;
+        commentsArray.forEach((element) => {
+          expect(element.article_id).toEqual(5);
+          expect(element).toHaveProperty("body");
+          expect(element).toHaveProperty("votes");
+          expect(element).toHaveProperty("author");
+          expect(element).toHaveProperty("created_at");
+          expect(element).toHaveProperty("comment_id");
+        });
         expect(res.body.comments).toEqual([
           {
             body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
