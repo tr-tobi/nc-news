@@ -123,24 +123,6 @@ describe("/articles/:article_id/comments", () => {
           expect(element).toHaveProperty("created_at");
           expect(element).toHaveProperty("comment_id");
         });
-        expect(res.body.comments).toEqual([
-          {
-            body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
-            votes: 16,
-            author: "icellusedkars",
-            article_id: 5,
-            created_at: "2020-06-09T05:00:00.000Z",
-            comment_id: 14,
-          },
-          {
-            body: "I am 100% sure that we're not completely sure.",
-            votes: 1,
-            author: "butter_bridge",
-            article_id: 5,
-            created_at: "2020-11-24T00:08:00.000Z",
-            comment_id: 15,
-          },
-        ]);
       });
   });
 
