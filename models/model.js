@@ -8,17 +8,38 @@ exports.sendUsers = () => {
   return db.query("SELECT * FROM users").then((result) => result.rows);
 };
 
-exports.sendArticles = () => {
+exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
+  const acceptedSort = [
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "article_img_url",
+  ];
+  const acceptedOrder = ["asc", "desc"];
+  if (!acceptedSort.includes(sort_by) || !acceptedOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  const queryValues = [];
+  let queryStr = `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.article_id)
+  AS comment_count
+  FROM articles a
+  LEFT JOIN comments c ON a.article_id = c.article_id`;
+
+  if (topic) {
+    queryValues.push(topic);
+    queryStr += ` WHERE a.topic = $1`;
+  }
+
   return db
     .query(
-      `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.article_id)
-    AS comment_count
-    FROM articles a
-    LEFT JOIN comments c ON a.article_id = c.article_id
-    GROUP BY a.article_id
-    ORDER BY a.created_at DESC`
+      queryStr + ` GROUP BY a.article_id ORDER BY ${sort_by} ${order}`,
+      queryValues
     )
-    .then((result) => result.rows);
+    .then((result) => {
+      return result.rows;
+    });
 };
 
 exports.selectArticleById = (article_id) => {
