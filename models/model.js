@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const format = require("pg-format");
 
 exports.sendTopics = () => {
   return db.query("SELECT * FROM topics").then((result) => result.rows);
@@ -45,4 +46,17 @@ exports.sendCommentsByArticleId = (article_id) => {
       }
       return result.rows;
     });
+};
+
+exports.insertCommentsByArticleId = (article_id, author, body) => {
+  const votes = 0;
+  const created_at = new Date();
+
+  const insertCommentQuery = format(
+    "INSERT INTO comments (article_id, author, body, votes, created_at) VALUES (%L) RETURNING *",
+    [article_id, author, body, votes, created_at]
+  );
+  return db.query(insertCommentQuery).then((result) => {
+    return result.rows[0];
+  });
 };
