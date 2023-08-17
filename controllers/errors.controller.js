@@ -5,6 +5,8 @@ exports.handle400Errors = (err, req, res, next) => {
     res.status(400).send({ msg: "Bad Request" });
   } else if (err.code === "23503" && err.detail.includes("author")) {
     res.status(400).send({ msg: "Invalid Username" });
+  } else if (err.code === "23502" && err.detail.includes("Failing")) {
+    res.status(400).send({ msg: "Bad Request" });
   } else {
     next(err);
   }
