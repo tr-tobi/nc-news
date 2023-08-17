@@ -135,11 +135,17 @@ describe("/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(201)
       .then((res) => {
-        expect(res.body.comment).toHaveProperty("body");
-        expect(res.body.comment).toHaveProperty("votes");
-        expect(res.body.comment).toHaveProperty("author");
-        expect(res.body.comment).toHaveProperty("created_at");
-        expect(res.body.comment).toHaveProperty("comment_id");
+        expect(res.body.comment).toHaveProperty("body", expect.any(String));
+        expect(res.body.comment).toHaveProperty("votes", expect.any(Number));
+        expect(res.body.comment).toHaveProperty("author", expect.any(String));
+        expect(res.body.comment).toHaveProperty(
+          "created_at",
+          expect.any(String)
+        );
+        expect(res.body.comment).toHaveProperty(
+          "comment_id",
+          expect.any(Number)
+        );
         expect(res.body.comment.article_id).toEqual(6);
       });
   });
@@ -155,6 +161,18 @@ describe("/articles/:article_id/comments", () => {
       .expect(201)
       .then((res) => {
         expect(res.body.comment).not.toHaveProperty("test");
+        expect(res.body.comment).toHaveProperty("body", expect.any(String));
+        expect(res.body.comment).toHaveProperty("votes", expect.any(Number));
+        expect(res.body.comment).toHaveProperty("author", expect.any(String));
+        expect(res.body.comment).toHaveProperty(
+          "created_at",
+          expect.any(String)
+        );
+        expect(res.body.comment).toHaveProperty(
+          "comment_id",
+          expect.any(Number)
+        );
+        expect(res.body.comment.article_id).toEqual(6);
       });
   });
   test("POST:400 obj contains author property but no body property", () => {
