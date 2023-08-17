@@ -6,6 +6,7 @@ const {
   updateArticleById,
   insertCommentsByArticleId,
   removeCommentById,
+  sendUsers,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -14,15 +15,33 @@ exports.getEndpoints = (req, res) => {
 };
 
 exports.getTopics = (req, res) => {
-  sendTopics().then((topics) => {
-    res.status(200).send({ topics });
-  });
+  sendTopics()
+    .then((topics) => {
+      res.status(200).send({ topics });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (req, res) => {
+  sendUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getArticles = (req, res) => {
-  sendArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  sendArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getArticleByid = (req, res, next) => {

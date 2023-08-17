@@ -8,6 +8,7 @@ const {
   patchArticleById,
   postCommentsByArticleId,
   deleteCommentById,
+  getUsers,
 } = require("./controllers/controller");
 const {
   handle400Errors,
@@ -20,6 +21,7 @@ app.use(express.json());
 app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
+app.get("/api/users", getUsers);
 app.get("/api/articles/:article_id", getArticleByid);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.patch("/api/articles/:article_id", patchArticleById);

@@ -1,8 +1,11 @@
 const db = require("../db/connection");
-const format = require("pg-format");
 
 exports.sendTopics = () => {
   return db.query("SELECT * FROM topics").then((result) => result.rows);
+};
+
+exports.sendUsers = () => {
+  return db.query("SELECT * FROM users").then((result) => result.rows);
 };
 
 exports.sendArticles = () => {
