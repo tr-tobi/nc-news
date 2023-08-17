@@ -29,15 +29,17 @@ exports.selectArticleById = (article_id) => {
 };
 
 exports.updateArticleById = (inc_votes, article_id) => {
-  console.log(inc_votes);
-  console.log(article_id);
   return db
     .query(
-      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;",
+      `
+      UPDATE articles
+      SET votes = votes + $1
+      WHERE article_id = $2
+      RETURNING *;
+    `,
       [inc_votes, article_id]
     )
     .then((result) => {
-      console.log("inside results");
       return result.rows[0];
     });
 };

@@ -80,7 +80,7 @@ describe("/articles/:article_id", () => {
         expect(res.body.article.article_id).toEqual(1);
       });
   });
-  /*test("PATCH:200 updates article by article_id", () => {
+  test("PATCH:200 updates article by article_id", () => {
     const newVotes = {
       inc_votes: 4,
     };
@@ -101,7 +101,7 @@ describe("/articles/:article_id", () => {
         });
         expect(res.body.article.article_id).toEqual(1);
       });
-  });*/
+  });
 
   test("GET:404 sends an appropriate and error message when given a valid but non-existent id", () => {
     return req(app)
