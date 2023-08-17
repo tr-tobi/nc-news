@@ -322,6 +322,20 @@ describe("/articles/:article_id/comments", () => {
   });
 });
 
+describe("/comments/:comment_id", () => {
+  test("DELETE:204 deletes the specified comment by comment_id", () => {
+    return req(app).delete("/api/comments/1").expect(204);
+  });
+  test("DELETE:400 responds with an appropriate error message when given an invalid id", () => {
+    return req(app)
+      .delete("/api/comments/hello")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid id");
+      });
+  });
+});
+
 describe("ALL /notapath", () => {
   test("404: should respond with a custom 404 message when the path is not found", () => {
     return req(app)
