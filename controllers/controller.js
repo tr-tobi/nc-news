@@ -6,6 +6,7 @@ const {
   updateArticleById,
   insertCommentsByArticleId,
   removeCommentById,
+  sendUsers,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -16,6 +17,13 @@ exports.getEndpoints = (req, res) => {
 exports.getTopics = (req, res) => {
   sendTopics().then((topics) => {
     res.status(200).send({ topics });
+  });
+};
+
+exports.getUsers = (req, res) => {
+  sendUsers().then((users) => {
+    console.log({ users });
+    res.status(200).send({ users });
   });
 };
 
