@@ -98,6 +98,81 @@ describe("/articles", () => {
         });
       });
   });
+  test("GET:200 sends an array of the article objects to the end point by topic value  specified in the query", () => {
+    return req(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles[0]).toMatchObject({
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          topic: "cats",
+          author: "rogersop",
+          created_at: "2020-08-03T13:14:00.000Z",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+        expect(res.body.articles[0].topic).toBe("cats");
+        expect(res.body.articles).toBeSorted("created_at");
+      });
+  });
+  test("GET:200 sends an array of the article objects to the end point by topic value  specified in the query", () => {
+    return req(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles[0].topic).toBe("mitch");
+        expect(res.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("GET:200 sends an array of the article objects to the end point in descending order", () => {
+    return req(app)
+      .get("/api/articles/?sort_by=author")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toBeSortedBy("author", {
+          descending: true,
+        });
+      });
+  });
+  test("GET:200 sends an array of the article objects to the end point in ascending order", () => {
+    return req(app)
+      .get("/api/articles/?sort_by=author&order=asc")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toBeSortedBy("author", {
+          ascending: true,
+        });
+      });
+  });
+  test("GET:200 sends all articles when query is invalid", () => {
+    return req(app)
+      .get("/api/articles/?test=asc")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        expect(res.body.articles.length).toEqual(13);
+      });
+  });
+  test("GET:400 sends error message when sort_by query is invalid", () => {
+    return req(app)
+      .get("/api/articles/?sort_by=hello")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET:400 sends error message when order query is invalid", () => {
+    return req(app)
+      .get("/api/articles/?order=hello")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
 });
 
 describe("/articles/:article_id", () => {
