@@ -22,8 +22,8 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
   }
 
   const queryValues = [];
-  let queryStr = `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.article_id)
-  AS comment_count
+  let queryStr = `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, 
+  CAST(COUNT(c.article_id) AS INT) AS comment_count
   FROM articles a
   LEFT JOIN comments c ON a.article_id = c.article_id`;
 
@@ -44,7 +44,16 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
 
 exports.selectArticleById = (article_id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
+    .query(
+      `SELECT a.*, COALESCE(CAST(c.comment_count AS INT), 0) AS comment_count
+      FROM articles a
+      LEFT JOIN (SELECT article_id, CAST(COUNT(*) AS INT) AS comment_count
+    FROM comments
+    GROUP BY article_id) 
+    c ON a.article_id = c.article_id
+    WHERE a.article_id = $1;`,
+      [article_id]
+    )
     .then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Article does not exist" });
