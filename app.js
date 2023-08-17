@@ -15,7 +15,6 @@ const {
 
 const app = express();
 app.use(express.json());
-app.use(express.json());
 
 app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
@@ -33,7 +32,6 @@ app.use(handle400Errors);
 app.use(handleCustomErrors);
 
 app.use((err, req, res, next) => {
-  console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });
 });
 
