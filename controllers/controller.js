@@ -9,6 +9,7 @@ const {
   sendUsers,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
+const { sort } = require("../db/data/test-data/articles");
 
 exports.getEndpoints = (req, res) => {
   res.status(200).send({ endpoints });
@@ -34,8 +35,9 @@ exports.getUsers = (req, res) => {
     });
 };
 
-exports.getArticles = (req, res) => {
-  sendArticles()
+exports.getArticles = (req, res, next) => {
+  const { topic, sort_by, order } = req.query;
+  sendArticles(topic, sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })
