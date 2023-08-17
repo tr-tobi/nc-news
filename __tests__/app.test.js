@@ -90,6 +90,19 @@ describe("/articles/:article_id", () => {
         expect(res.body.article.article_id).toEqual(1);
       });
   });
+  /*test("PATCH:200 updates article by article_id", () => {
+    const newVotes = {
+      inc_votes: 4,
+    };
+    return request(app)
+      .post("/api/teams")
+      .send(newTeam)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.team).toMatchObject({ team_id: 5, ...newTeam });
+      });
+  });*/
+
   test("GET:404 sends an appropriate and error message when given a valid but non-existent id", () => {
     return req(app)
       .get("/api/articles/999")
