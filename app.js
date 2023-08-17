@@ -5,6 +5,7 @@ const {
   getArticles,
   getArticleByid,
   getCommentsByArticleId,
+  postCommentsByArticleId,
 } = require("./controllers/controller");
 const {
   handle400Errors,
@@ -12,12 +13,14 @@ const {
 } = require("./controllers/errors.controller");
 
 const app = express();
+app.use(express.json());
 
 app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleByid);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
 
 app.use((_, res) => {
   res.status(404).send({ msg: "Not Found" });
