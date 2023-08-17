@@ -143,6 +143,33 @@ describe("/articles/:article_id/comments", () => {
         expect(res.body.comment.article_id).toEqual(6);
       });
   });
+  test("POST:201 obj contains author and body properties along with other properties", () => {
+    const newComment = {
+      author: "butter_bridge",
+      body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      test: 4,
+    };
+    return req(app)
+      .post("/api/articles/6/comments")
+      .send(newComment)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.comment).not.toHaveProperty("test");
+      });
+  });
+  test.only("POST:400 obj contains author property but no body property", () => {
+    const newComment = {
+      test: 4,
+      author: "butter_bridge",
+    };
+    return req(app)
+      .post("/api/articles/6/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
   test("POST:400 inserts a new comment of a given article_id to the db and sends the new comment back to the client for a username that is in the users table", () => {
     const newComment = {
       author: "tr-tobi",
@@ -157,7 +184,7 @@ describe("/articles/:article_id/comments", () => {
       });
   });
 
-  test("POST:404 sends an appropriate error message when given a valid but non-existent id", () => {
+  test("POST:404 sends an appropriate error message when given a valid but non-existent id with invalid username", () => {
     const newComment = {
       author: "tr-tobi",
       body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
@@ -170,10 +197,36 @@ describe("/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("Article does not exist");
       });
   });
+  test("POST:404 sends an appropriate error message when given a valid but non-existent id with valid username", () => {
+    const newComment = {
+      author: "butter_bridge",
+      body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    };
+    return req(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article does not exist");
+      });
+  });
 
-  test("POST:400 sends an appropriate and error message when given an invalid id", () => {
+  test("POST:400 sends an appropriate and error message when given an invalid id with invalid username", () => {
     const newComment = {
       author: "tr-tobi",
+      body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    };
+    return req(app)
+      .post("/api/articles/hello/comments")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid id");
+      });
+  });
+  test("POST:400 sends an appropriate and error message when given an invalid id with valid username", () => {
+    const newComment = {
+      author: "butter_bridge",
       body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     };
     return req(app)
