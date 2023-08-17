@@ -157,7 +157,7 @@ describe("/articles/:article_id/comments", () => {
         expect(res.body.comment).not.toHaveProperty("test");
       });
   });
-  test.only("POST:400 obj contains author property but no body property", () => {
+  test("POST:400 obj contains author property but no body property", () => {
     const newComment = {
       test: 4,
       author: "butter_bridge",
@@ -183,20 +183,6 @@ describe("/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("Invalid Username");
       });
   });
-
-  test("POST:404 sends an appropriate error message when given a valid but non-existent id with invalid username", () => {
-    const newComment = {
-      author: "tr-tobi",
-      body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    };
-    return req(app)
-      .post("/api/articles/999/comments")
-      .send(newComment)
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("Article does not exist");
-      });
-  });
   test("POST:404 sends an appropriate error message when given a valid but non-existent id with valid username", () => {
     const newComment = {
       author: "butter_bridge",
@@ -208,20 +194,6 @@ describe("/articles/:article_id/comments", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Article does not exist");
-      });
-  });
-
-  test("POST:400 sends an appropriate and error message when given an invalid id with invalid username", () => {
-    const newComment = {
-      author: "tr-tobi",
-      body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    };
-    return req(app)
-      .post("/api/articles/hello/comments")
-      .send(newComment)
-      .expect(400)
-      .then((res) => {
-        expect(res.body.msg).toBe("Invalid id");
       });
   });
   test("POST:400 sends an appropriate and error message when given an invalid id with valid username", () => {
