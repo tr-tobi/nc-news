@@ -5,6 +5,7 @@ const {
   sendCommentsByArticleId,
   updateArticleById,
   insertCommentsByArticleId,
+  removeCommentById,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -64,6 +65,17 @@ exports.postCommentsByArticleId = (req, res, next) => {
   insertCommentsByArticleId(article_id, author, body)
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  removeCommentById(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);
