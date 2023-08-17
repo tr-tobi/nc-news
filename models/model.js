@@ -49,14 +49,12 @@ exports.sendCommentsByArticleId = (article_id) => {
 };
 
 exports.insertCommentsByArticleId = (article_id, author, body) => {
-  const votes = 0;
-  const created_at = new Date();
-
-  const insertCommentQuery = format(
-    "INSERT INTO comments (article_id, author, body, votes, created_at) VALUES (%L) RETURNING *",
-    [article_id, author, body, votes, created_at]
-  );
-  return db.query(insertCommentQuery).then((result) => {
-    return result.rows[0];
-  });
+  return db
+    .query(
+      "INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *",
+      [article_id, author, body]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
 };
