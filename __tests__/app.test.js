@@ -4,6 +4,7 @@ const data = require("../db/data/test-data");
 const req = require("supertest");
 const seed = require("../db/seeds/seed");
 const endpoints = require("../endpoints.json");
+const e = require("express");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -324,7 +325,12 @@ describe("/articles/:article_id/comments", () => {
 
 describe("/comments/:comment_id", () => {
   test("DELETE:204 deletes the specified comment by comment_id", () => {
-    return req(app).delete("/api/comments/1").expect(204);
+    return req(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((response) => {
+        expect(404);
+      });
   });
   test("DELETE:400 responds with an appropriate error message when given an invalid id", () => {
     return req(app)
