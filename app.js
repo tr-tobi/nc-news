@@ -5,6 +5,7 @@ const {
   getArticles,
   getArticleByid,
   getCommentsByArticleId,
+  patchArticleById,
 } = require("./controllers/controller");
 const {
   handle400Errors,
@@ -17,6 +18,7 @@ app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleByid);
+app.patch("/api/articles/:article_id", patchArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.use((_, res) => {
