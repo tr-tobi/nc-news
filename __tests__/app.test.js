@@ -102,6 +102,69 @@ describe("/articles/:article_id", () => {
         expect(res.body.article.article_id).toEqual(1);
       });
   });
+  test("PATCH:200 obj contains inc_votes property along with other properties", () => {
+    const newVotes = {
+      inc_votes: 4,
+      test: 5,
+    };
+    return req(app)
+      .patch("/api/articles/1")
+      .send(newVotes)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article).not.toHaveProperty("test");
+        expect(res.body.article).toHaveProperty("title", expect.any(String));
+        expect(res.body.article).toHaveProperty("topic", expect.any(String));
+        expect(res.body.article).toHaveProperty("author", expect.any(String));
+        expect(res.body.article).toHaveProperty("body", expect.any(String));
+        expect(res.body.article).toHaveProperty(
+          "created_at",
+          expect.any(String)
+        );
+        expect(res.body.article).toHaveProperty("votes", expect.any(Number));
+        expect(res.body.article).toHaveProperty(
+          "article_img_url",
+          expect.any(String)
+        );
+        expect(res.body.article.article_id).toEqual(1);
+      });
+  });
+  test("PATCH:400 obj contains no inc_votes property", () => {
+    const newComment = {
+      test: 4,
+    };
+    return req(app)
+      .patch("/api/articles/1")
+      .send(newComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("Patch:404 sends an appropriate error message when given a valid but non-existent id with valid inc_votes", () => {
+    const newVotes = {
+      inc_votes: 4,
+    };
+    return req(app)
+      .patch("/api/articles/999")
+      .send(newVotes)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article does not exist");
+      });
+  });
+  test("Patch:400 sends an appropriate and error message when given an invalid id with valid inc_votes", () => {
+    const newVotes = {
+      inc_votes: 4,
+    };
+    return req(app)
+      .patch("/api/articles/hello")
+      .send(newVotes)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid id");
+      });
+  });
 
   test("GET:404 sends an appropriate and error message when given a valid but non-existent id", () => {
     return req(app)
