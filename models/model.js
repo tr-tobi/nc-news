@@ -1,4 +1,6 @@
 const db = require("../db/connection");
+const testTopics = require("../db/data/test-data/topics");
+const devTopics = require("../db/data/development-data/topics");
 
 exports.sendTopics = () => {
   return db.query("SELECT * FROM topics").then((result) => result.rows);
@@ -17,10 +19,15 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
     "article_img_url",
   ];
   const acceptedOrder = ["asc", "desc"];
-  const acceptedTopic = ["mitch", "paper", "cats"];
   if (!acceptedSort.includes(sort_by) || !acceptedOrder.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
+  const uniqueTopics = [];
+  testTopics.forEach((item) => {
+    if (!uniqueTopics.includes(item.slug)) {
+      uniqueTopics.push(item.slug);
+    }
+  });
 
   const queryValues = [];
   let queryStr = `SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, 
@@ -29,7 +36,7 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
   LEFT JOIN comments c ON a.article_id = c.article_id`;
 
   if (topic) {
-    if (acceptedTopic.includes(topic)) {
+    if (uniqueTopics.includes(topic)) {
       queryValues.push(topic);
       queryStr += ` WHERE a.topic = $1`;
     } else {
