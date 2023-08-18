@@ -17,6 +17,7 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
     "article_img_url",
   ];
   const acceptedOrder = ["asc", "desc"];
+  const acceptedTopic = ["mitch", "paper", "cats"];
   if (!acceptedSort.includes(sort_by) || !acceptedOrder.includes(order)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
@@ -28,8 +29,12 @@ exports.sendArticles = (topic, sort_by = "created_at", order = "desc") => {
   LEFT JOIN comments c ON a.article_id = c.article_id`;
 
   if (topic) {
-    queryValues.push(topic);
-    queryStr += ` WHERE a.topic = $1`;
+    if (acceptedTopic.includes(topic)) {
+      queryValues.push(topic);
+      queryStr += ` WHERE a.topic = $1`;
+    } else {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
   }
 
   return db
