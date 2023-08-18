@@ -146,6 +146,14 @@ describe("/articles", () => {
         });
       });
   });
+  test("GET:200 sends an empty array of with no article objects to the end point", () => {
+    return req(app)
+      .get("/api/articles/?topic=paper")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toEqual([]);
+      });
+  });
   test("GET:200 sends all articles when query is invalid", () => {
     return req(app)
       .get("/api/articles/?test=asc")
@@ -171,6 +179,15 @@ describe("/articles", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("GET:404 sends error message for non-existent topic query", () => {
+    return req(app)
+      .get("/api/articles/?topic=bananas")
+      .expect(404)
+      .then((res) => {
+        console.log(res);
+        expect(res.body.msg).toBe("Not Found");
       });
   });
 });
