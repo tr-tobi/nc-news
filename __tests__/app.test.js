@@ -186,7 +186,6 @@ describe("/articles", () => {
       .get("/api/articles/?topic=bananas")
       .expect(404)
       .then((res) => {
-        console.log(res);
         expect(res.body.msg).toBe("Not Found");
       });
   });
