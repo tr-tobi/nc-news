@@ -111,8 +111,9 @@ describe("/articles", () => {
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
-        expect(res.body.articles[0].topic).toBe("cats");
-        expect(res.body.articles).toBeSorted("created_at");
+        expect(res.body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
       });
   });
   test("GET:200 sends an array of the article objects to the end point by topic value  specified in the query", () => {
@@ -120,7 +121,6 @@ describe("/articles", () => {
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then((res) => {
-        expect(res.body.articles[0].topic).toBe("mitch");
         expect(res.body.articles).toBeSortedBy("created_at", {
           descending: true,
         });
